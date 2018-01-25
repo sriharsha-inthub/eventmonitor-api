@@ -1,5 +1,8 @@
 package com.inthub.eventmonitor.models;
 
+import org.jsondoc.core.annotation.ApiObject;
+
+@ApiObject
 public class BusinessIdentifiers {
 	
 	private String business_Identifier1;

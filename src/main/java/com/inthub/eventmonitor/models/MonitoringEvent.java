@@ -4,12 +4,14 @@ package com.inthub.eventmonitor.models;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.jsondoc.core.annotation.ApiObject;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 
 @Document(collection="eventlogs")
+@ApiObject
 public class MonitoringEvent implements Serializable{
 	
 	/**

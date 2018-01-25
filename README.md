@@ -15,7 +15,7 @@ MAVEN
 
 ### Step-1: Clone this repository
 
-git clone https://github.com/INTHUB/eventmonitor.git
+git clone https://github.com/sriharsha-inthubss/eventmonitor.git
 		
 ### Step-2: Setup dependencies 
 Nagigate to <downloaded-dir>\eventmonitor and run mvn phase
@@ -25,13 +25,20 @@ mvn clean install
 ### Step-3: The application is packaged as jar(uber jar), can be run directly exposing rest api @ port 8080
 Simple run ::- java -jar target/eventmonitor-0.0.1-SNAPSHOT.jar
 
-Debug run ::- java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n \
-       -jar target/eventmonitor-0.0.1-SNAPSHOT.jar
+Debug run ::- java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n -jar target/eventmonitor-0.0.1-SNAPSHOT.jar
+
+Using the Maven plugin ::- mvn spring-boot:run
 
 Note:- To have service run under custom port, update property "server.port" in application.properties.
-	   
-### Step-4: Using the Maven plugin
-mvn spring-boot:run
+
+
+### Step-4: Test it.
+The application includes REST API Documentation detailing all methods/featurfes available & a play ground to actually test.
+Open http://localhost:8080/jsondoc-ui.html
+JSONDoc Search for http://localhost:8080/jsondoc Click {Get documentation}
+
+Use any of the HTTP methods & test.
+
 
 
 ### Detailed description:-
