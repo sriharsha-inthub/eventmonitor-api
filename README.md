@@ -34,7 +34,9 @@ Note:- To have service run under custom port, update property "server.port" in a
 
 ### Step-4: Test it.
 The application includes REST API Documentation detailing all methods/featurfes available & a play ground to actually test.
+
 Open http://localhost:8080/jsondoc-ui.html
+
 JSONDoc Search for http://localhost:8080/jsondoc Click {Get documentation}
 
 Use any of the HTTP methods & test.
