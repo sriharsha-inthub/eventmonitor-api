@@ -1,4 +1,4 @@
-# eventmonitor
+# Event monitor
 
 Application Event Monitor REST api
 # Overview
@@ -66,7 +66,7 @@ The source is divided into multiple directories(packages), 1 each for specific f
 
 ##### models dir is POJO's representation of full event message structure
 
-Note:-  Repositories interfaces can be used to talk to other no/SQL databases(SQL, ORA, DB2) 
+Note:-  Repositories interfaces can be used to talk to other no/SQL databases(SQL, ORA, DB2, Cassandra, Azure Document, Couchbase, Redis GemFire, Solr ) 
 
 
 
