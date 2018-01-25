@@ -6,26 +6,34 @@ Application Event Monitor REST api
 This repository contains the source for filtering & exposing events sourced from database.
 The database is contained in a nosql database(MongoDB) and is hosted on cloud server(SaaS).
 
-Steps to setup & test it locally.
+Steps to run & test it locally.
 
 ### Prerequisites:
 
 JDK 1.8
+
 MAVEN
 
 ### Step-1: Clone this repository
 
-git clone https://github.com/sriharsha-inthubss/eventmonitor.git
+git clone https://github.com/INTHUB/eventmonitor.git
 		
 ### Step-2: Setup dependencies 
-Nagigate to <downloaded-dir>\eventmonitor and run mvn phase
+Navigate to <downloaded-dir>\eventmonitor and run mvn phase
+
 cd eventmonitor
+
 mvn clean install
 
 ### Step-3: The application is packaged as jar(uber jar), can be run directly exposing rest api @ port 8080
+
 Simple run ::- java -jar target/eventmonitor-0.0.1-SNAPSHOT.jar
 
+OR
+
 Debug run ::- java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n -jar target/eventmonitor-0.0.1-SNAPSHOT.jar
+
+OR
 
 Using the Maven plugin ::- mvn spring-boot:run
 
@@ -33,7 +41,8 @@ Note:- To have service run under custom port, update property "server.port" in a
 
 
 ### Step-4: Test it.
-The application includes REST API Documentation detailing all methods/featurfes available & a play ground to actually test.
+
+The application includes REST API Documentation detailing all methods/features available & a play ground to actually test.
 
 Open http://localhost:8080/jsondoc-ui.html
 
