@@ -15,7 +15,7 @@ MAVEN
 
 ### Step-1: Clone this repository
 
-git clone https://github.com/sriharsha-inthubss/eventmonitor.git
+git clone https://github.com/INTHUB/eventmonitor.git
 		
 ### Step-2: Setup dependencies 
 Nagigate to <downloaded-dir>\eventmonitor and run mvn phase
