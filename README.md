@@ -50,7 +50,9 @@ JSONDoc Search for http://localhost:8080/jsondoc Click {Get documentation}
 
 Use any of the HTTP methods & test.
 
+OR 
 
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/a313606cf46f72f82081)
 
 ### Detailed description:-
 
