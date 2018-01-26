@@ -1,7 +1,6 @@
 package com.inthub.eventmonitor.repositories;
 
 import com.inthub.eventmonitor.models.MonitoringEvent;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -23,7 +22,7 @@ public interface MonitoringEventRepository
 	// returns total number of records in collection
 	long count();
 
-	@Cacheable("monitoringevents")
+	// @Cacheable("monitoringevents")
 	Page<MonitoringEvent> findAll(Pageable pageable);
 
 	List<MonitoringEvent> findAll(Sort sort);
