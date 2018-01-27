@@ -5,10 +5,7 @@ import com.inthub.eventmonitor.models.Total;
 import com.inthub.eventmonitor.services.MonitoringEventService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jsondoc.core.annotation.Api;
-import org.jsondoc.core.annotation.ApiAuthNone;
-import org.jsondoc.core.annotation.ApiMethod;
-import org.jsondoc.core.annotation.ApiPathParam;
+import org.jsondoc.core.annotation.*;
 import org.jsondoc.core.pojo.ApiStage;
 import org.jsondoc.core.pojo.ApiVisibility;
 import org.springframework.data.domain.Page;
@@ -37,9 +34,9 @@ public class MonitoringEventController {
 	// @Autowired
 	// MonitoringEventRepository eventRepository;
 	// @Autowired
-	MonitoringEventService eventService;
-	private static final Logger logger = LogManager.getLogger(MonitoringEventController.class);
 
+	private static final Logger logger = LogManager.getLogger(MonitoringEventController.class);
+	private MonitoringEventService eventService;
 	public MonitoringEventController(MonitoringEventService eventService){
 		this.eventService = eventService;
 	}
@@ -52,56 +49,72 @@ public class MonitoringEventController {
 		return eventService.count();
 	}
 	
-	@GetMapping("/events/page/{pageNumber}/{pageSize}")
+	/*@GetMapping(
+			value = "/events/page",
+			params = {"pageNumber", "pageSize"}
+			)
 	@ApiMethod(description = "Get all monitoring events from the database by pagination i.e pagenumber by size")
 	public Page<MonitoringEvent> getAllEventsBypage(
+			@ApiPathParam(name = "pageNumber") @RequestParam("pageNumber") int pageNumber,
+			@ApiPathParam(name = "pageSize") @RequestParam("pageSize") int pageSize) {*/
+
+	@GetMapping("/events/page/{pageNumber}/{pageSize}")
+	@ApiMethod(description = "Get all monitoring events from the database by pagination i.e pagenumber by size",
+			summary = "Get all monitoring events from the database by pagination i.e pagenumber by size")
+	public ResponseEntity<Page<MonitoringEvent>> getAllEventsBypage(
 			@ApiPathParam(name = "pageNumber") @PathVariable("pageNumber") int pageNumber,
 			@ApiPathParam(name = "pageSize") @PathVariable("pageSize") int pageSize) {
-		logger.debug("Request received @/events/page/{pageNumber}/{pageSize}");
-		Page<MonitoringEvent> eventList = eventService.findAll(MonitoringEventService.PageSpecification.constructPageSpecification(pageNumber, pageSize));
-//		System.out.println("Page getSize() = "+eventList.getSize());
-//		System.out.println("Page getTotalPages() = "+eventList.getTotalPages());
-//		System.out.println("Page hasPrevious() = "+eventList.hasPrevious());
-//		System.out.println("Page hasNext() = "+eventList.hasNext());
-//		System.out.println("Page getTotalElements = "+eventList.getTotalElements());
-		return eventList;
-	}
+			logger.debug("Request received @/events/page/{pageNumber}/{pageSize}");
+			Page<MonitoringEvent> eventList = eventService.findAll(MonitoringEventService.PageSpecification.constructPageSpecification(pageNumber, pageSize));
+	//		System.out.println("Page getSize() = "+eventList.getSize());
+	//		System.out.println("Page getTotalPages() = "+eventList.getTotalPages());
+	//		System.out.println("Page hasPrevious() = "+eventList.hasPrevious());
+	//		System.out.println("Page hasNext() = "+eventList.hasNext());
+	//		System.out.println("Page getTotalElements = "+eventList.getTotalElements());
+			if (eventList.getSize()<1) {
+				return new ResponseEntity<>(eventList, HttpStatus.NO_CONTENT);
+			} else {
+				return new ResponseEntity<>(eventList, HttpStatus.OK);
+			}
+		}
 
-//	@GetMapping("/events")
-//	@ApiMethod(description = "Get all monitoring events from the database")
-//	public List<MonitoringEvent> getAllEvents() {
-//		Sort sortByEventTimestampDesc = new Sort(Sort.Direction.DESC, "event.timestamp");
-//		List<MonitoringEvent> eventList = eventService.findAll(sortByEventTimestampDesc);
-//		//eventList.forEach(System.out::println);
-//		return eventList;
-//	}
+	@GetMapping("/events")
+	@ApiMethod(responsestatuscode = "200", description = "Get all monitoring events from the database",	stage = ApiStage.DEPRECATED)
+	@ApiErrors(apierrors={ @ApiError(code = "DEPRICATED", description = "Instead use events by pagination; -> /events/page/{pageNumber}/{pageSize}")
+	})
+	public List<MonitoringEvent> getAllEvents() {
+		Sort sortByEventTimestampDesc = new Sort(Sort.Direction.DESC, "event.timestamp");
+		//List<MonitoringEvent> eventList = eventService.findAll(sortByEventTimestampDesc);
+		//return eventList;
+		return null;
+	}
 
 	@GetMapping(value = "/events/txnIdGlobal/{txnIdGlobalValue}")
 	@ApiMethod(description = "Get all monitoring events for specified global transaction id from the database")
 	public ResponseEntity<List<MonitoringEvent>> getByGlobalTransactionId(
 			@ApiPathParam(name = "txnIdGlobalValue") @PathVariable("txnIdGlobalValue") String globalTxnId) {
-		logger.debug("Request received @/events/txnIdGlobal/{txnIdGlobalValue}");
+		logger.debug("Request received @/events/txnIdParent/{txnIdGlobalValue}");
 		List<MonitoringEvent> eventList = eventService.findByGlobalTransactionId(globalTxnId);
 		if (eventList.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(eventList, HttpStatus.NO_CONTENT);
 		} else {
 			return new ResponseEntity<>(eventList, HttpStatus.OK);
 		}
 	}
-	
+
 	@GetMapping(value = "/events/txnIdParent/{txnIdParentValue}")
-	@ApiMethod(description = "Get all monitoring events for specified parent transaction id from the database")
+	@ApiMethod(description = "Get all monitoring events for specified global transaction id from the database")
 	public ResponseEntity<List<MonitoringEvent>> getByParentTransactionId(
 			@ApiPathParam(name = "txnIdParentValue") @PathVariable("txnIdParentValue") String parentTxnId) {
 		logger.debug("Request received @/events/txnIdParent/{txnIdParentValue}");
 		List<MonitoringEvent> eventList = eventService.findByParentTransactionId(parentTxnId);
 		if (eventList.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(eventList, HttpStatus.NO_CONTENT);
 		} else {
 			return new ResponseEntity<>(eventList, HttpStatus.OK);
 		}
 	}
-	
+
 	@GetMapping(value = "/events/txnIdLocal/{txnIdLocalValue}")
 	@ApiMethod(description = "Get monitoring event for specified local transaction id from the database")
 	public ResponseEntity<List<MonitoringEvent>> getByLocalTransactionId(
@@ -109,7 +122,7 @@ public class MonitoringEventController {
 		logger.debug("Request received @/events/txnIdLocal/{txnIdLocalValue}");
 		List<MonitoringEvent> eventList = eventService.findByLocalTransactionId(localTxnId);
 		if (eventList.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(eventList, HttpStatus.NO_CONTENT);
 		} else {
 			return new ResponseEntity<>(eventList, HttpStatus.OK);
 		}
@@ -122,7 +135,7 @@ public class MonitoringEventController {
 		logger.debug("Request received @/events/businessProcess/{businessProcessValue}");
 		List<MonitoringEvent> eventList = eventService.findByBusinessProcess(businessProcess);
 		if (eventList.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(eventList, HttpStatus.NO_CONTENT);
 		} else {
 			return new ResponseEntity<>(eventList, HttpStatus.OK);
 		}
@@ -135,7 +148,7 @@ public class MonitoringEventController {
 		logger.debug("Request received @/events/sourceApp/{sourceAppValue}");
 		List<MonitoringEvent> eventList = eventService.findBySourceAppInfo(sourceAppValue);
 		if (eventList.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(eventList, HttpStatus.NO_CONTENT);
 		} else {
 			return new ResponseEntity<>(eventList, HttpStatus.OK);
 		}
@@ -148,7 +161,7 @@ public class MonitoringEventController {
 		logger.debug("Request received @/events/destinationApp/{destinationAppValue}");
 		List<MonitoringEvent> eventList = eventService.findByDestinationAppInfo(destinationAppValue);
 		if (eventList.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(eventList, HttpStatus.NO_CONTENT);
 		} else {
 			return new ResponseEntity<>(eventList, HttpStatus.OK);
 		}
@@ -161,7 +174,7 @@ public class MonitoringEventController {
 		logger.debug("Request received @/events/appName/{appNameValue}");
 		List<MonitoringEvent> eventList = eventService.findByApplicationName(applicationNameValue);
 		if (eventList.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(eventList, HttpStatus.NO_CONTENT);
 		} else {
 			return new ResponseEntity<>(eventList, HttpStatus.OK);
 		}
@@ -174,7 +187,7 @@ public class MonitoringEventController {
 		logger.debug("Request received @/events/msgFlowName/{msgFlowNameValue}/");
 		List<MonitoringEvent> eventList = eventService.findByMsgFlowName(msgFlowNameValue);
 		if (eventList.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(eventList, HttpStatus.NO_CONTENT);
 		} else {
 			return new ResponseEntity<>(eventList, HttpStatus.OK);
 		}
@@ -183,11 +196,11 @@ public class MonitoringEventController {
 	@GetMapping(value = "/events/errorCode/{errorCodeValue}")
 	@ApiMethod(description = "Get all monitoring event for specified error code from the database")
 	public ResponseEntity<List<MonitoringEvent>> findByErrorCode(
-			@ApiPathParam(name = "eventTimestampValue") @PathVariable("eventTimestampValue") String errorCodeValue) {
+			@ApiPathParam(name = "errorCodeValue") @PathVariable("errorCodeValue") String errorCodeValue) {
 		logger.debug("Request received @/events/errorCode/{errorCodeValue}");
 		List<MonitoringEvent> eventList = eventService.findByErrorCode(errorCodeValue);
 		if (eventList.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(eventList, HttpStatus.NO_CONTENT);
 		} else {
 			return new ResponseEntity<>(eventList, HttpStatus.OK);
 		}
@@ -200,7 +213,7 @@ public class MonitoringEventController {
 		Sort sortByEventTimestampDesc = new Sort(Sort.Direction.DESC, "event.timestamp");
 		List<MonitoringEvent> eventList = eventService.findAllErrors(sortByEventTimestampDesc, true);
 		if (eventList.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(eventList, HttpStatus.NO_CONTENT);
 		} else {
 			return new ResponseEntity<>(eventList, HttpStatus.OK);
 		}
@@ -213,7 +226,7 @@ public class MonitoringEventController {
 		logger.debug("Request received @/events/txnIdGlobal/like/{txnIdGlobalValue}");
 		List<MonitoringEvent> eventList = eventService.findByGlobalTransactionIdLike(txnIdGloballike);
 		if (eventList.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(eventList, HttpStatus.NO_CONTENT);
 		} else {
 			return new ResponseEntity<>(eventList, HttpStatus.OK);
 		}
@@ -226,7 +239,7 @@ public class MonitoringEventController {
 		logger.debug("Request received @/events/txnIdParent/like/{txnIdParentValue}");
 		List<MonitoringEvent> eventList = eventService.findByParentTransactionIdLike(txnIdParentlike);
 		if (eventList.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(eventList, HttpStatus.NO_CONTENT);
 		} else {
 			return new ResponseEntity<>(eventList, HttpStatus.OK);
 		}
@@ -239,7 +252,7 @@ public class MonitoringEventController {
 		logger.debug("Request received @/events/txnIdLocal/like/{txnIdLocalValue}");
 		List<MonitoringEvent> eventList = eventService.findByLocalTransactionIdLike(txnIdLocallike);
 		if (eventList.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(eventList, HttpStatus.NO_CONTENT);
 		} else {
 			return new ResponseEntity<>(eventList, HttpStatus.OK);
 		}
@@ -252,7 +265,7 @@ public class MonitoringEventController {
 		logger.debug("Request received @/events/appName/like/{appNameValue}");
 		List<MonitoringEvent> eventList = eventService.findByApplicationNameLike(appNamelike);
 		if (eventList.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(eventList, HttpStatus.NO_CONTENT);
 		} else {
 			return new ResponseEntity<>(eventList, HttpStatus.OK);
 		}
@@ -265,7 +278,7 @@ public class MonitoringEventController {
 		logger.debug("Request received @/events/msgFlowName/like/{msgFlowNameValue}");
 		List<MonitoringEvent> eventList = eventService.findByMsgFlowNameLike(msgFlowNameLike);
 		if (eventList.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(eventList, HttpStatus.NO_CONTENT);
 		} else {
 			return new ResponseEntity<>(eventList, HttpStatus.OK);
 		}
@@ -279,7 +292,7 @@ public class MonitoringEventController {
 		logger.debug("Request received @/events/eventTime/between/{startTime}/{endTime}/");
 		List<MonitoringEvent> eventList = eventService.findByEventTimestampBetween(startTime, endTime);
 		if (eventList.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(eventList, HttpStatus.NO_CONTENT);
 		} else {
 			return new ResponseEntity<>(eventList, HttpStatus.OK);
 		}

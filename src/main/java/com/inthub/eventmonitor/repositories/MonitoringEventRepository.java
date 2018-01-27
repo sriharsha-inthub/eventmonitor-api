@@ -33,7 +33,7 @@ public interface MonitoringEventRepository
 	@Query("{'transactionId.parent_Transaction_Id': ?0}")
 	List<MonitoringEvent> findByParentTransactionId(String parentTxnId);
 
-	@Query("{'transactionId.parent_Transaction_Id': ?0}")
+	@Query("{'transactionId.local_Transaction_Id': ?0}")
 	List<MonitoringEvent> findByLocalTransactionId(String localTxnId);
 
 	@Query("{'business_Process': ?0}")

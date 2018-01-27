@@ -5,7 +5,6 @@ import com.inthub.eventmonitor.models.Total;
 import com.inthub.eventmonitor.repositories.MonitoringEventRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,9 +30,12 @@ public class MonitoringEventService {
 		}
 	}
 
-	@Autowired
+	// @Autowired private MonitoringEventRepository eventRepository;
 	private MonitoringEventRepository eventRepository;
 
+	public MonitoringEventService(MonitoringEventRepository eventRepository){
+		this.eventRepository = eventRepository;
+	}
 	/*
 	 * public Page<MonitoringEvent> findAllByPages(int pageNumber , int pageSize){
 	 * Sort sortByEventTimestampDesc = new Sort(Sort.Direction.DESC,
