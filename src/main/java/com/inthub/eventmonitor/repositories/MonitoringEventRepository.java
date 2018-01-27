@@ -58,8 +58,7 @@ public interface MonitoringEventRepository
 	List<MonitoringEvent> findAllErrors(Sort sort, boolean allErrors);
 
 	// ######################################################################################
-	// ### START = Search based on regex expression (startWith | endsWith |
-	// containing..) ###
+	// ### START = Search based on regex expression (startWith | endsWith | containing..) ###
 	// ######################################################################################
 
 	@Query("{ 'transactionId.global_Transaction_Id' : { $regex: ?0 } }")
