@@ -57,14 +57,19 @@ OR
 ### Watch Application statistics @URI
 
 http://localhost:8080/watch/health
+
 http://localhost:8080/watch/metrics
+
 http://localhost:8080/watch/trace
 
 Techinical/Low level statistics...
 
 http://localhost:8080/watch/env
+
 http://localhost:8080/watch/beans
+
 http://localhost:8080/watch/dump
+
 http://localhost:8080/watch/auditevents
 
 
