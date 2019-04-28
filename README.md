@@ -54,6 +54,20 @@ OR
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/a313606cf46f72f82081)
 
+### Watch Application statistics @URI
+
+http://localhost:8080/watch/health
+http://localhost:8080/watch/metrics
+http://localhost:8080/watch/trace
+
+Techinical/Low level statistics...
+
+http://localhost:8080/watch/env
+http://localhost:8080/watch/beans
+http://localhost:8080/watch/dump
+http://localhost:8080/watch/auditevents
+
+
 ### Detailed description:-
 
 The source is divided into multiple directories(packages), 1 each for specific functionality.
